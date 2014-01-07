@@ -48,6 +48,8 @@
 #define TRex_True 1
 #define TRex_False 0
 
+#define TREX_CASE 1
+
 typedef unsigned int TRexBool;
 typedef struct TRex TRex;
 

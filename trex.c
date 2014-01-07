@@ -371,13 +371,29 @@ static TRexBool trex_matchclass(TRex* exp,TRexNode *node,TRexChar c)
 	do {
 		switch(node->type) {
 			case OP_RANGE:
-				if(c >= node->left && c <= node->right) return TRex_True;
+				if (exp->_flags & TREX_CASE)
+				{
+					if(c >= toupper(node->left) && c <= toupper(node->right)) return TRex_True;
+					if(c >= tolower(node->left) && c <= tolower(node->right)) return TRex_True;
+				}
+				else
+				{
+					if(c >= node->left && c <= node->right) return TRex_True;
+				}
 				break;
 			case OP_CCLASS:
 				if(trex_matchcclass(node->left,c)) return TRex_True;
 				break;
 			default:
-				if(c == node->type)return TRex_True;
+				if (exp->_flags & TREX_CASE)
+				{
+					if (c == tolower(node->type) || c == toupper(node->type)) return TRex_True;
+				}
+				else
+				{
+					if(c == node->type)return TRex_True;
+				}
+
 		}
 	} while((node->next != -1) && (node = &exp->_nodes[node->next]));
 	return TRex_False;
@@ -521,7 +537,14 @@ static const TRexChar *trex_matchnode(TRex* exp,TRexNode *node,const TRexChar *s
 		}
 		return NULL;
 	default: /* char */
-		if(*str != node->type) return NULL;
+		if (exp->_flags & TREX_CASE)
+		{
+			if(*str != tolower(node->type) && *str != toupper(node->type)) return NULL;
+		}
+		else
+		{
+			if (*str != node->type) return NULL;
+		}
 		*str++;
 		return str;
 	}
