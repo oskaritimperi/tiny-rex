@@ -27,9 +27,7 @@
 
 ****************************************************************/
 
-extern "C" {
 #include "trex.h"
-}
 
 struct TRexParseException{TRexParseException(const TRexChar *c):desc(c){}const TRexChar *desc;};
 
@@ -38,10 +36,10 @@ public:
 	TRexpp() { _exp = (TRex *)0; }
 	~TRexpp() { CleanUp(); }
 	// compiles a regular expression
-	void Compile(const TRexChar *pattern) {
+	void Compile(const TRexChar *pattern, int flags) {
 		const TRexChar *error;
 		CleanUp();
-		if(!(_exp = trex_compile(pattern,&error)))
+		if(!(_exp = trex_compile(pattern,&error,flags)))
 			throw TRexParseException(error);
 	}
 	// return true if the given text match the expression

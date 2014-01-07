@@ -27,6 +27,10 @@
 
 ****************************************************************/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef _UNICODE
 #define TRexChar unsigned short
 #define MAX_CHAR 0xFFFF
@@ -65,5 +69,9 @@ TREX_API TRexBool trex_search(TRex* exp,const TRexChar* text, const TRexChar** o
 TREX_API TRexBool trex_searchrange(TRex* exp,const TRexChar* text_begin,const TRexChar* text_end,const TRexChar** out_begin, const TRexChar** out_end);
 TREX_API int trex_getsubexpcount(TRex* exp);
 TREX_API TRexBool trex_getsubexp(TRex* exp, int n, TRexMatch *subexp);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
