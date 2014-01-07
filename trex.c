@@ -76,6 +76,7 @@ struct TRex{
 	int _currsubexp;
 	void *_jmpbuf;
 	const TRexChar **_error;
+	int _flags;
 };
 
 static int trex_list(TRex *exp);
@@ -528,7 +529,7 @@ static const TRexChar *trex_matchnode(TRex* exp,TRexNode *node,const TRexChar *s
 }
 
 /* public api */
-TRex *trex_compile(const TRexChar *pattern,const TRexChar **error)
+TRex *trex_compile(const TRexChar *pattern,const TRexChar **error,int flags)
 {
 	TRex *exp = (TRex *)malloc(sizeof(TRex));
 	exp->_eol = exp->_bol = NULL;
@@ -541,6 +542,7 @@ TRex *trex_compile(const TRexChar *pattern,const TRexChar **error)
 	exp->_first = trex_newnode(exp,OP_EXPR);
 	exp->_error = error;
 	exp->_jmpbuf = malloc(sizeof(jmp_buf));
+	exp->_flags = flags;
 	if(setjmp(*((jmp_buf*)exp->_jmpbuf)) == 0) {
 		int res = trex_list(exp);
 		exp->_nodes[exp->_first].left = res;
